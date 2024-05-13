@@ -3,6 +3,7 @@ import 'package:mobile_app/features/reports/controllers/reports_controller.dart'
 import 'package:mobile_app/features/reports/views/reports_error_view.dart';
 import 'package:mobile_app/features/reports/views/reports_loaded_view.dart';
 import 'package:mobile_app/features/reports/views/reports_loading_view.dart';
+import 'package:mobile_app/features/reports/widgets/create_report_button.dart';
 import 'package:provider/provider.dart';
 
 class ReportPage extends StatefulWidget {
@@ -18,13 +19,7 @@ class _ReportPageState extends State<ReportPage> {
   @override
   void initState() {
     super.initState();
-    reportsController = ReportsController(context.read())..init();
-  }
-
-  @override
-  void dispose() {
-    reportsController.dispose();
-    super.dispose();
+    reportsController = context.read();
   }
 
   @override
@@ -40,13 +35,20 @@ class _ReportPageState extends State<ReportPage> {
             final state = reportsController.state;
 
             return switch (state) {
-              ReportsLoadedState() => ReportsLoadedView(state.reports, key: ValueKey(state.reports)),
+              ReportsLoadedState() => RefreshIndicator(
+                  onRefresh: reportsController.init,
+                  child: ReportsLoadedView(
+                    key: ValueKey(state.reports),
+                    state.reports,
+                  ),
+                ),
               ReportsLoadingState() => const ReportsLoadingView(),
               ReportsErrorState() => const ReportsErrorView(),
             };
           },
         ),
       ),
+      floatingActionButton: CreateReportButton(reportsController: reportsController),
     );
   }
 }

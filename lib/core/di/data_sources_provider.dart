@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:mobile_app/data/data_sources/checking_data_source.dart';
+import 'package:mobile_app/data/data_sources/local_data_sources/employee_reports_data_source/employee_reports_data_source.dart';
 import 'package:mobile_app/data/data_sources/photo_picking_data_source.dart';
-import 'package:mobile_app/data/data_sources/user_photo_data_source.dart';
+import 'package:mobile_app/data/data_sources/remote_data_sources/files_data_source.dart';
+import 'package:mobile_app/data/data_sources/remote_data_sources/profile_data_source/profile_data_source.dart';
 import 'package:provider/provider.dart';
 
 class DataSourcesProvider extends StatefulWidget {
@@ -17,9 +18,10 @@ class DataSourcesProvider extends StatefulWidget {
 }
 
 class _DataSourcesProvidersState extends State<DataSourcesProvider> {
-  late final UserPhotoDataSource userPhotoDataSource;
+  late final FilesDataSource userPhotoDataSource;
   late final CheckingDataSource checkingDataSource;
   late final PhotoPickingDataSource photoPickingDataSource;
+  late final ProfileDataSource profileDataSource;
 
   @override
   void initState() {
@@ -34,14 +36,16 @@ class _DataSourcesProvidersState extends State<DataSourcesProvider> {
         Provider.value(value: userPhotoDataSource),
         Provider.value(value: checkingDataSource),
         Provider.value(value: photoPickingDataSource),
+        Provider.value(value: profileDataSource),
       ],
       child: widget.child,
     );
   }
 
   void _initSources() {
-    userPhotoDataSource = UserPhotoDataSource(context.read());
+    userPhotoDataSource = FilesDataSource(context.read());
     checkingDataSource = CheckingDataSource(context.read());
     photoPickingDataSource = PhotoPickingDataSource();
+    profileDataSource = ProfileDataSource(context.read());
   }
 }
